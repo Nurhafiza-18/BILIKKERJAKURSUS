@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistem Pengurusan Bilik Kerja Kursus STPM</title>
+
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --warning: #d97706;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --card: #ffffff;
+      --radius: 18px;
+      --shadow: 0 12px 35px rgba(15, 23, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #dbeafe, #f8fafc);
+      color: var(--text);
+      padding: 24px;
+    }
+
+    .app {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #1e40af, #2563eb);
+      color: white;
+      padding: 32px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+    }
+
+    .header h1 {
+      font-size: 30px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .header p {
+      opacity: 0.92;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .connection {
+      margin-top: 14px;
+      display: inline-block;
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.3);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      border: none;
+      background: white;
+      color: var(--text);
+      padding: 13px 18px;
+      border-radius: 14px;
+      cursor: pointer;
+      font-weight: 700;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+      transition: 0.2s ease;
+    }
+
+    .tab-btn:hover {
+      transform: translateY(-1px);
+      background: #eff6ff;
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .grid,
+    .admin-grid {
+      display: grid;
+      grid-template-columns: 390px 1fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      margin-bottom: 22px;
+    }
+
+    .card h2 {
+      font-size: 21px;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 22px;
+      line-height: 1.5;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 7px;
+      font-size: 14px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px 13px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 15px;
+      background: #fff;
+      outline: none;
+      transition: 0.2s ease;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+    }
+
+    small {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .btn {
+      border: none;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .btn-full {
+      width: 100%;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+
+    .btn-warning {
+      background: var(--warning);
+      color: white;
+    }
+
+    .btn-light {
+      background: #f3f4f6;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 700px;
+      background: white;
+    }
+
+    thead {
+      background: #eff6ff;
+    }
+
+    th,
+    td {
+      padding: 13px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+      vertical-align: top;
+    }
+
+    th {
+      color: #1e3a8a;
+      font-weight: 800;
+    }
+
+    tbody tr:hover {
+      background: #f9fafb;
+    }
+
+    .empty-state {
+      text-align: center;
+      color: var(--muted);
+      padding: 24px;
+      font-size: 14px;
+    }
+
+    .info-box {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1e40af;
+      padding: 14px;
+      border-radius: 14px;
+      font-size: 14px;
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
+
+    .warning-box {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      color: #92400e;
+      padding: 14px;
+      border-radius: 14px;
+      font-size: 14px;
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
+
+    .toast {
+      position: fixed;
+      top: 22px;
+      right: 22px;
+      background: #16a34a;
+      color: white;
+      padding: 14px 18px;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      font-weight: 700;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-15px);
+      transition: 0.3s ease;
+      z-index: 999;
+      max-width: 360px;
+      line-height: 1.4;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #dbeafe;
+      color: #1e40af;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      body {
+        padding: 14px;
+      }
+
+      .header {
+        padding: 24px;
+      }
+
+      .header h1 {
+        font-size: 23px;
+      }
+
+      .grid,
+      .admin-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .tab-btn {
+        flex: 1;
+        min-width: 170px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <header class="header">
+      <h1>Sistem Pengurusan Bilik Kerja Kursus STPM</h1>
+      <p>Rekod penggunaan bilik, penghantaran fail kerja kursus dan pengurusan daftar guru.</p>
+      <div class="connection" id="connectionStatus">Menyambung ke Google Sheets...</div>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab-btn active" data-tab="tab-log">Log Bilik Kerja Kursus</button>
+      <button class="tab-btn" data-tab="tab-fail">Penghantaran Fail KK</button>
+      <button class="tab-btn" data-tab="tab-admin">Panel Admin</button>
+    </nav>
+
+    <section id="tab-log" class="tab-content active">
+      <div class="grid">
+        <div class="card">
+          <h2>Log Masuk Bilik</h2>
+          <p class="subtitle">Pengguna taip nama sendiri untuk merekod penggunaan bilik.</p>
+
+          <form id="logForm" novalidate>
+            <div class="form-group">
+              <label for="logTeacherName">Nama</label>
+              <input type="text" id="logTeacherName" placeholder="Taip nama anda" required />
+            </div>
+
+            <div class="form-group">
+              <label for="logDate">Tarikh</label>
+              <input type="date" id="logDate" required />
+            </div>
+
+            <div class="form-group">
+              <label for="logTime">Masa Masuk</label>
+              <input
+                type="text"
+                id="logTime"
+                inputmode="numeric"
+                maxlength="5"
+                placeholder="Contoh: 08:30 / 14:45"
+                required
+              />
+              <small>Format 24 jam sahaja. Contoh: 07:16, 13:42, 18:45. Sistem akan simpan tepat seperti yang ditaip.</small>
+            </div>
+
+            <div class="form-group">
+              <label for="logPurpose">Tujuan</label>
+              <textarea id="logPurpose" placeholder="Contoh: Semakan fail kerja kursus pelajar" required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-full">Simpan Log Masuk</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <h2>Sejarah Penggunaan Bilik</h2>
+          <p class="subtitle">Rekod penggunaan bilik yang telah diisi oleh pengguna.</p>
+
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Bil.</th>
+                  <th>Nama</th>
+                  <th>Tarikh</th>
+                  <th>Masa</th>
+                  <th>Tujuan</th>
+                </tr>
+              </thead>
+              <tbody id="logTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-fail" class="tab-content">
+      <div class="grid">
+        <div class="card">
+          <h2>Penghantaran Fail Kerja Kursus</h2>
+          <p class="subtitle">Guru merekodkan jumlah fail kerja kursus yang dihantar.</p>
+
+          <form id="fileForm" novalidate>
+            <div class="form-group">
+              <label for="fileTeacher">Nama Guru</label>
+              <select id="fileTeacher" required>
+                <option value="">Memuatkan senarai guru...</option>
+              </select>
+              <small>Nama guru diambil daripada daftar guru dalam Panel Admin.</small>
+            </div>
+
+            <div class="form-group">
+              <label for="className">Kelas</label>
+              <select id="className" required>
+                <option value="">-- Pilih Kelas --</option>
+                <option value="6 Harland">6 Harland</option>
+                <option value="6 Rowling">6 Rowling</option>
+                <option value="6 Tolkien">6 Tolkien</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="cohortYear">Kohort</label>
+              <select id="cohortYear" required>
+                <option value="">-- Pilih Kohort --</option>
+                <option value="2026">Kohort 2026</option>
+                <option value="2027">Kohort 2027</option>
+                <option value="2028">Kohort 2028</option>
+                <option value="2029">Kohort 2029</option>
+                <option value="2030">Kohort 2030</option>
+                <option value="2031">Kohort 2031</option>
+                <option value="2032">Kohort 2032</option>
+                <option value="2033">Kohort 2033</option>
+                <option value="2034">Kohort 2034</option>
+                <option value="2035">Kohort 2035</option>
+                <option value="2036">Kohort 2036</option>
+              </select>
+              <small>Maklumat kohort akan disimpan bersama ruangan Kelas tanpa menambah kolum baharu dalam spreadsheet.</small>
+            </div>
+
+            <div class="form-group">
+              <label for="fileCount">Jumlah Fail Dihantar</label>
+              <input type="number" id="fileCount" min="1" placeholder="Contoh: 20" required />
+            </div>
+
+            <div class="form-group">
+              <label for="fileDate">Tarikh</label>
+              <input type="date" id="fileDate" required />
+            </div>
+
+            <button type="submit" class="btn btn-success btn-full">Hantar Fail</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <h2>Sejarah Penghantaran Fail</h2>
+          <p class="subtitle">Rekod penghantaran fail kerja kursus yang telah dihantar.</p>
+
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Bil.</th>
+                  <th>Nama Guru</th>
+                  <th>Kelas</th>
+                  <th>Jumlah Fail</th>
+                  <th>Tarikh</th>
+                </tr>
+              </thead>
+              <tbody id="fileHistoryBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-admin" class="tab-content">
+      <div id="adminLoginCard" class="card">
+        <h2>Log Masuk Admin</h2>
+        <p class="subtitle">Masukkan password admin untuk mengurus daftar guru dan melihat semua sejarah pengguna.</p>
+
+        <div class="info-box">
+          Sila masukkan password admin untuk mengakses panel pentadbir.
+        </div>
+
+        <form id="adminLoginForm" novalidate>
+          <div class="form-group">
+            <label for="adminPassword">Password Admin</label>
+            <input type="password" id="adminPassword" placeholder="Masukkan password admin" required />
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full">Masuk Panel Admin</button>
+        </form>
+      </div>
+
+      <div id="adminPanel" class="hidden">
+        <div class="info-box">
+          <strong>Status:</strong> Anda sedang berada dalam Panel Admin.
+          <button id="adminLogoutBtn" class="btn btn-light" style="margin-left: 10px;">Log Keluar Admin</button>
+        </div>
+
+        <div class="admin-grid">
+          <div class="card">
+            <h2>Daftar Nama Guru</h2>
+            <p class="subtitle">Admin boleh tambah, kemas kini atau nyahaktifkan nama guru.</p>
+
+            <form id="teacherForm" novalidate>
+              <input type="hidden" id="teacherId" />
+
+              <div class="form-group">
+                <label for="teacherNameInput">Nama Guru</label>
+                <input type="text" id="teacherNameInput" placeholder="Contoh: Cikgu Hafiza" required />
+              </div>
+
+              <div class="btn-row">
+                <button type="submit" class="btn btn-primary" id="saveTeacherBtn">Tambah Guru</button>
+                <button type="button" class="btn btn-light hidden" id="cancelEditBtn">Batal Kemaskini</button>
+              </div>
+            </form>
+
+            <br />
+
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Bil.</th>
+                    <th>Nama Guru</th>
+                    <th>Tindakan</th>
+                  </tr>
+                </thead>
+                <tbody id="teacherTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div>
+            <div class="card">
+              <h2>History Pengguna - Log Bilik</h2>
+              <p class="subtitle">Senarai pengguna yang telah mengisi log penggunaan bilik.</p>
+
+              <div class="table-wrapper">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Bil.</th>
+                      <th>Nama</th>
+                      <th>Tarikh</th>
+                      <th>Masa</th>
+                      <th>Tujuan</th>
+                      <th>Masa Rekod</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminLogHistoryBody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="card">
+              <h2>History Pengguna - Penghantaran Fail KK</h2>
+              <p class="subtitle">Senarai guru yang telah menghantar rekod fail kerja kursus.</p>
+
+              <div class="table-wrapper">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Bil.</th>
+                      <th>Nama Guru</th>
+                      <th>Kelas</th>
+                      <th>Jumlah Fail</th>
+                      <th>Tarikh</th>
+                      <th>Masa Rekod</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminFileHistoryBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <p class="footer-note">
+      Sistem disambungkan kepada Google Sheets melalui Apps Script JSONP.
+    </p>
+  </div>
+
+  <div id="toast" class="toast">Berjaya!</div>
+
+  <script>
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbx36RbhYUHwmxILEjqY6BEcHHnJDMJLH3PYqnZHwSQt1u1DravgzskuX105U24ccy4xWw/exec";
+
+    let teachers = [];
+    let roomLogs = [];
+    let fileSubmissions = [];
+    let userEditedLogTime = false;
+
+    const connectionStatus = document.getElementById("connectionStatus");
+    const logForm = document.getElementById("logForm");
+    const logTeacherName = document.getElementById("logTeacherName");
+    const logDate = document.getElementById("logDate");
+    const logTime = document.getElementById("logTime");
+    const logPurpose = document.getElementById("logPurpose");
+    const logTableBody = document.getElementById("logTableBody");
+
+    const fileForm = document.getElementById("fileForm");
+    const fileTeacher = document.getElementById("fileTeacher");
+    const className = document.getElementById("className");
+    const cohortYear = document.getElementById("cohortYear");
+    const fileCount = document.getElementById("fileCount");
+    const fileDate = document.getElementById("fileDate");
+    const fileHistoryBody = document.getElementById("fileHistoryBody");
+
+    const adminLoginCard = document.getElementById("adminLoginCard");
+    const adminPanel = document.getElementById("adminPanel");
+    const adminLoginForm = document.getElementById("adminLoginForm");
+    const adminPassword = document.getElementById("adminPassword");
+    const adminLogoutBtn = document.getElementById("adminLogoutBtn");
+
+    const teacherForm = document.getElementById("teacherForm");
+    const teacherId = document.getElementById("teacherId");
+    const teacherNameInput = document.getElementById("teacherNameInput");
+    const saveTeacherBtn = document.getElementById("saveTeacherBtn");
+    const cancelEditBtn = document.getElementById("cancelEditBtn");
+    const teacherTableBody = document.getElementById("teacherTableBody");
+
+    const adminLogHistoryBody = document.getElementById("adminLogHistoryBody");
+    const adminFileHistoryBody = document.getElementById("adminFileHistoryBody");
+
+    logDate.value = getTodayMalaysiaDate();
+    logTime.value = getCurrentTime();
+    fileDate.value = getTodayMalaysiaDate();
+
+    function getMalaysiaDateObject() {
+      const malaysiaString = new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Kuala_Lumpur"
+      });
+
+      return new Date(malaysiaString);
+    }
+
+    function getTodayMalaysiaDate() {
+      const myDate = getMalaysiaDateObject();
+      const year = myDate.getFullYear();
+      const month = String(myDate.getMonth() + 1).padStart(2, "0");
+      const day = String(myDate.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    function getCurrentTime() {
+      const myDate = getMalaysiaDateObject();
+      const hour = String(myDate.getHours()).padStart(2, "0");
+      const minute = String(myDate.getMinutes()).padStart(2, "0");
+      return `${hour}:${minute}`;
+    }
+
+    function escapeHTML(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function showToast(message, type = "success") {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.style.background = type === "danger" ? "#dc2626" : "#16a34a";
+      toast.classList.add("show");
+
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 3200);
+    }
+
+    function createId() {
+      return "LOCAL_" + Date.now() + "_" + Math.floor(Math.random() * 10000);
+    }
+
+    function formatDate(dateString) {
+      if (!dateString) return "-";
+
+      if (/^\d{4}-\d{2}-\d{2}$/.test(String(dateString))) {
+        const date = new Date(dateString + "T00:00:00");
+        return date.toLocaleDateString("ms-MY", {
+          day: "2-digit",
+          month: "long",
+          year: "numeric"
+        });
+      }
+
+      const date = new Date(dateString);
+      if (!isNaN(date)) {
+        return date.toLocaleDateString("ms-MY", {
+          day: "2-digit",
+          month: "long",
+          year: "numeric"
+        });
+      }
+
+      return String(dateString);
+    }
+
+    function formatDateTime(dateTimeString) {
+      if (!dateTimeString) return "-";
+      const date = new Date(dateTimeString);
+
+      if (isNaN(date)) return String(dateTimeString);
+
+      return date.toLocaleString("ms-MY", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      });
+    }
+
+    async function hashText(text) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(text);
+      const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+
+      return hashArray
+        .map(byte => byte.toString(16).padStart(2, "0"))
+        .join("");
+    }
+
+    function getLogName(log) {
+      return log.teacherName || log.teacherNameSnapshot || log.name || log.namaGuru || log.Nama_Guru || "-";
+    }
+
+    function getLogTime(log) {
+      return log.time || log.logTime || log.masa || log.Masa_Masuk || "-";
+    }
+
+    function getSubmissionTeacher(item) {
+      return item.teacherName || item.teacherNameSnapshot || item.name || item.namaGuru || "-";
+    }
+
+    function jsonp(params) {
+      return new Promise((resolve, reject) => {
+        const callbackName = "jsonpCallback_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
+        const script = document.createElement("script");
+        const url = new URL(GAS_URL);
+
+        Object.keys(params).forEach((key) => {
+          if (params[key] !== undefined && params[key] !== null) {
+            url.searchParams.set(key, params[key]);
+          }
+        });
+
+        url.searchParams.set("callback", callbackName);
+        url.searchParams.set("_t", Date.now());
+
+        const timer = setTimeout(() => {
+          cleanup();
+          reject(new Error("Gagal sambung ke Apps Script. Semak deploy Web App dan akses Anyone."));
+        }, 12000);
+
+        window[callbackName] = function (data) {
+          clearTimeout(timer);
+          cleanup();
+          resolve(data);
+        };
+
+        script.onerror = function () {
+          clearTimeout(timer);
+          cleanup();
+          reject(new Error("Gagal sambung ke Apps Script. Semak URL Web App."));
+        };
+
+        function cleanup() {
+          delete window[callbackName];
+          if (script.parentNode) script.parentNode.removeChild(script);
+        }
+
+        script.src = url.toString();
+        document.body.appendChild(script);
+      });
+    }
+
+    async function loadData() {
+      try {
+        connectionStatus.textContent = "Menyambung ke Google Sheets...";
+
+        let result = await jsonp({ action: "getAllData" });
+
+        if (!result.ok && String(result.message || "").includes("Action tidak sah")) {
+          result = await jsonp({ action: "getData" });
+        }
+
+        if (!result.ok) {
+          throw new Error(result.message || "Gagal mendapatkan data.");
+        }
+
+        const data = result.data || result;
+
+        teachers = data.teachers || data.guru || data.daftarGuru || [];
+        roomLogs = data.roomLogs || data.logs || data.logBilik || [];
+        fileSubmissions = data.fileSubmissions || data.submissions || data.fileHistory || [];
+
+        connectionStatus.textContent = "Google Sheets berjaya disambungkan";
+        renderAll();
+      } catch (err) {
+        connectionStatus.textContent = "Gagal sambung database";
+        showToast(err.message, "danger");
+        renderAll();
+      }
+    }
+
+    function renderAll() {
+      renderTeacherOptions();
+      renderRoomLogs();
+      renderFileHistory();
+      renderTeacherTable();
+      renderAdminLogHistory();
+      renderAdminFileHistory();
+      renderAdminState();
+    }
+
+    function renderTeacherOptions() {
+      let html = "";
+
+      if (!teachers.length) {
+        html = `<option value="">Tiada nama guru dalam daftar admin</option>`;
+        fileTeacher.innerHTML = html;
+        return;
+      }
+
+      html = `<option value="">-- Pilih Nama Guru --</option>`;
+
+      teachers.forEach((teacher) => {
+        const id = teacher.id || teacher.teacherId || teacher.Guru_ID || teacher.name;
+        const name = teacher.name || teacher.teacherName || teacher.Nama_Guru || teacher.namaGuru || id;
+
+        html += `<option value="${escapeHTML(id)}" data-name="${escapeHTML(name)}">${escapeHTML(name)}</option>`;
+      });
+
+      fileTeacher.innerHTML = html;
+    }
+
+    function renderRoomLogs() {
+      if (!roomLogs.length) {
+        logTableBody.innerHTML = `<tr><td colspan="5" class="empty-state">Tiada rekod penggunaan bilik setakat ini.</td></tr>`;
+        return;
+      }
+
+      logTableBody.innerHTML = roomLogs.map((log, index) => `
+        <tr>
+          <td>${index + 1}</td>
+          <td><span class="badge">${escapeHTML(getLogName(log))}</span></td>
+          <td>${formatDate(log.date || log.tarikh || log.Tarikh)}</td>
+          <td>${escapeHTML(getLogTime(log))}</td>
+          <td>${escapeHTML(log.purpose || log.tujuan || log.Tujuan || "-")}</td>
+        </tr>
+      `).join("");
+    }
+
+    function renderFileHistory() {
+      if (!fileSubmissions.length) {
+        fileHistoryBody.innerHTML = `<tr><td colspan="5" class="empty-state">Tiada rekod penghantaran fail setakat ini.</td></tr>`;
+        return;
+      }
+
+      fileHistoryBody.innerHTML = fileSubmissions.map((item, index) => `
+        <tr>
+          <td>${index + 1}</td>
+          <td><span class="badge">${escapeHTML(getSubmissionTeacher(item))}</span></td>
+          <td>${escapeHTML(item.className || item.kelas || item.Kelas || "-")}</td>
+          <td>${escapeHTML(item.fileCount || item.jumlahFail || item.Jumlah_Fail || "-")}</td>
+          <td>${formatDate(item.date || item.tarikh || item.Tarikh)}</td>
+        </tr>
+      `).join("");
+    }
+
+    function renderTeacherTable() {
+      if (!teachers.length) {
+        teacherTableBody.innerHTML = `<tr><td colspan="3" class="empty-state">Tiada nama guru dalam daftar. Sila tambah nama guru.</td></tr>`;
+        return;
+      }
+
+      teacherTableBody.innerHTML = teachers.map((teacher, index) => {
+        const id = teacher.id || teacher.teacherId || teacher.Guru_ID || teacher.name;
+        const name = teacher.name || teacher.teacherName || teacher.Nama_Guru || teacher.namaGuru || id;
+
+        return `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${escapeHTML(name)}</td>
+            <td>
+              <div class="btn-row">
+                <button class="btn btn-warning" onclick="editTeacher('${escapeHTML(id)}')">Kemaskini</button>
+                <button class="btn btn-danger" onclick="deleteTeacher('${escapeHTML(id)}')">Nyahaktif</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function renderAdminLogHistory() {
+      if (!roomLogs.length) {
+        adminLogHistoryBody.innerHTML = `<tr><td colspan="6" class="empty-state">Tiada history log bilik.</td></tr>`;
+        return;
+      }
+
+      adminLogHistoryBody.innerHTML = roomLogs.map((log, index) => `
+        <tr>
+          <td>${index + 1}</td>
+          <td>${escapeHTML(getLogName(log))}</td>
+          <td>${formatDate(log.date || log.tarikh || log.Tarikh)}</td>
+          <td>${escapeHTML(getLogTime(log))}</td>
+          <td>${escapeHTML(log.purpose || log.tujuan || log.Tujuan || "-")}</td>
+          <td>${formatDateTime(log.createdAt || log.submittedAt || log.Masa_Rekod)}</td>
+        </tr>
+      `).join("");
+    }
+
+    function renderAdminFileHistory() {
+      if (!fileSubmissions.length) {
+        adminFileHistoryBody.innerHTML = `<tr><td colspan="6" class="empty-state">Tiada history penghantaran fail.</td></tr>`;
+        return;
+      }
+
+      adminFileHistoryBody.innerHTML = fileSubmissions.map((item, index) => `
+        <tr>
+          <td>${index + 1}</td>
+          <td>${escapeHTML(getSubmissionTeacher(item))}</td>
+          <td>${escapeHTML(item.className || item.kelas || item.Kelas || "-")}</td>
+          <td>${escapeHTML(item.fileCount || item.jumlahFail || item.Jumlah_Fail || "-")}</td>
+          <td>${formatDate(item.date || item.tarikh || item.Tarikh)}</td>
+          <td>${formatDateTime(item.submittedAt || item.createdAt || item.Masa_Rekod)}</td>
+        </tr>
+      `).join("");
+    }
+
+    function renderAdminState() {
+      if (sessionStorage.getItem("adminLoggedIn") === "true") {
+        adminLoginCard.classList.add("hidden");
+        adminPanel.classList.remove("hidden");
+      } else {
+        adminLoginCard.classList.remove("hidden");
+        adminPanel.classList.add("hidden");
+      }
+    }
+
+    document.querySelectorAll(".tab-btn").forEach((button) => {
+      button.addEventListener("click", () => {
+        const selectedTab = button.dataset.tab;
+
+        document.querySelectorAll(".tab-btn").forEach((btn) => btn.classList.remove("active"));
+        document.querySelectorAll(".tab-content").forEach((content) => content.classList.remove("active"));
+
+        button.classList.add("active");
+        document.getElementById(selectedTab).classList.add("active");
+
+        if (selectedTab === "tab-log") {
+          if (!logDate.value) logDate.value = getTodayMalaysiaDate();
+          if (!userEditedLogTime && !logTime.value) logTime.value = getCurrentTime();
+        }
+      });
+    });
+
+    logTime.addEventListener("input", function () {
+      userEditedLogTime = true;
+
+      let value = logTime.value.replace(/[^0-9]/g, "");
+
+      if (value.length > 4) value = value.slice(0, 4);
+      if (value.length >= 3) value = value.slice(0, 2) + ":" + value.slice(2);
+
+      logTime.value = value;
+    });
+
+    logTime.addEventListener("focus", function () {
+      userEditedLogTime = true;
+    });
+
+    logForm.addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      const teacherName = logTeacherName.value.trim();
+      const date = logDate.value.trim();
+      const time = logTime.value.trim();
+      const purpose = logPurpose.value.trim();
+
+      const time24Pattern = /^([01]\d|2[0-3]):[0-5]\d$/;
+
+      if (!teacherName) {
+        showToast("Sila taip nama anda.", "danger");
+        logTeacherName.focus();
+        return;
+      }
+
+      if (!date) {
+        showToast("Sila pilih tarikh.", "danger");
+        logDate.focus();
+        return;
+      }
+
+      if (!time24Pattern.test(time)) {
+        showToast("Masa Masuk mesti dalam format 24 jam. Contoh: 07:16 atau 18:30.", "danger");
+        logTime.focus();
+        return;
+      }
+
+      if (!purpose) {
+        showToast("Sila isi tujuan penggunaan bilik.", "danger");
+        logPurpose.focus();
+        return;
+      }
+
+      try {
+        const result = await jsonp({
+          action: "addRoomLog",
+          teacherName: teacherName,
+          name: teacherName,
+          date: date,
+          time: time,
+          logTime: time,
+          masa: time,
+          purpose: purpose
+        });
+
+        if (!result.ok) throw new Error(result.message || "Log bilik gagal disimpan.");
+
+        showToast("Log bilik berjaya disimpan!");
+
+        logForm.reset();
+        userEditedLogTime = false;
+        logDate.value = getTodayMalaysiaDate();
+        logTime.value = getCurrentTime();
+
+        await loadData();
+      } catch (err) {
+        showToast(err.message, "danger");
+      }
+    });
+
+    fileForm.addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      if (!fileTeacher.value) {
+        showToast("Sila pilih nama guru. Jika senarai kosong, tambah nama guru di Panel Admin.", "danger");
+        fileTeacher.focus();
+        return;
+      }
+
+      if (!cohortYear.value) {
+        showToast("Sila pilih kohort.", "danger");
+        cohortYear.focus();
+        return;
+      }
+
+      if (!className.value) {
+        showToast("Sila pilih kelas.", "danger");
+        className.focus();
+        return;
+      }
+
+      if (!cohortYear.value) {
+        showToast("Sila pilih kohort.", "danger");
+        cohortYear.focus();
+        return;
+      }
+
+      const selectedOption = fileTeacher.options[fileTeacher.selectedIndex];
+      const selectedTeacherName = selectedOption ? selectedOption.dataset.name : "";
+      const classWithCohort = `${className.value} - Kohort ${cohortYear.value}`;
+
+      try {
+        const result = await jsonp({
+          action: "addFileSubmission",
+          teacherId: fileTeacher.value,
+          teacherName: selectedTeacherName,
+          className: classWithCohort,
+          fileCount: fileCount.value,
+          date: fileDate.value
+        });
+
+        if (!result.ok) throw new Error(result.message || "Penghantaran fail gagal disimpan.");
+
+        showToast("Penghantaran fail berjaya disimpan!");
+        fileForm.reset();
+        fileDate.value = getTodayMalaysiaDate();
+
+        await loadData();
+      } catch (err) {
+        showToast(err.message, "danger");
+      }
+    });
+
+    adminLoginForm.addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      try {
+        const passwordHash = await hashText(adminPassword.value);
+
+        const result = await jsonp({
+          action: "adminLogin",
+          passwordHash
+        });
+
+        if (!result.ok) throw new Error(result.message || "Password admin salah.");
+
+        sessionStorage.setItem("adminLoggedIn", "true");
+        adminPassword.value = "";
+        renderAdminState();
+        showToast("Admin berjaya log masuk!");
+      } catch (err) {
+        showToast(err.message, "danger");
+      }
+    });
+
+    adminLogoutBtn.addEventListener("click", function () {
+      sessionStorage.removeItem("adminLoggedIn");
+      renderAdminState();
+      showToast("Admin telah log keluar.");
+    });
+
+    teacherForm.addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      const name = teacherNameInput.value.trim();
+
+      if (!name) {
+        showToast("Nama guru tidak boleh kosong.", "danger");
+        return;
+      }
+
+      try {
+        const action = teacherId.value ? "updateTeacher" : "addTeacher";
+
+        const result = await jsonp({
+          action,
+          id: teacherId.value,
+          name
+        });
+
+        if (!result.ok) throw new Error(result.message || "Gagal menyimpan nama guru.");
+
+        showToast(result.message || "Nama guru berjaya disimpan.");
+        resetTeacherForm();
+        await loadData();
+      } catch (err) {
+        showToast(err.message, "danger");
+      }
+    });
+
+    function editTeacher(id) {
+      const teacher = teachers.find((item) => String(item.id || item.teacherId || item.Guru_ID || item.name) === String(id));
+      if (!teacher) return;
+
+      const name = teacher.name || teacher.teacherName || teacher.Nama_Guru || teacher.namaGuru || "";
+
+      teacherId.value = id;
+      teacherNameInput.value = name;
+      saveTeacherBtn.textContent = "Simpan Kemaskini";
+      cancelEditBtn.classList.remove("hidden");
+      teacherNameInput.focus();
+    }
+
+    async function deleteTeacher(id) {
+      const confirmDelete = confirm("Adakah anda pasti mahu nyahaktifkan nama guru ini?");
+      if (!confirmDelete) return;
+
+      try {
+        const result = await jsonp({
+          action: "deleteTeacher",
+          id
+        });
+
+        if (!result.ok) throw new Error(result.message || "Gagal nyahaktifkan nama guru.");
+
+        showToast(result.message || "Nama guru telah dinyahaktifkan.");
+        resetTeacherForm();
+        await loadData();
+      } catch (err) {
+        showToast(err.message, "danger");
+      }
+    }
+
+    function resetTeacherForm() {
+      teacherForm.reset();
+      teacherId.value = "";
+      saveTeacherBtn.textContent = "Tambah Guru";
+      cancelEditBtn.classList.add("hidden");
+    }
+
+    cancelEditBtn.addEventListener("click", resetTeacherForm);
+
+    loadData();
+    renderAdminState();
+  </script>
+</body>
+</html>
